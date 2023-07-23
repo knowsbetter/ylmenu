@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from services.submenu_service import SubmenuService
-from services.submenu_service import get_submenu_service as ss
+from services.submenu_service import get_submenu_service
 
 from routers import menu_router, submenu_router, dish_router
 
@@ -17,7 +17,7 @@ submenu_router = APIRouter()
     status_code=201,
     tags=["Подменю"],
 )
-async def create_submenu(menu_id: int, submenu: schemes.SubmenuBase, submenu_service: SubmenuService = Depends(ss)):
+async def create_submenu(menu_id: int, submenu: schemes.SubmenuBase, submenu_service: SubmenuService = Depends(get_submenu_service)):
     """Create submenu item"""
     res = await submenu_service.create_submenu(menu_id, submenu)
     if not res:
@@ -33,7 +33,7 @@ async def create_submenu(menu_id: int, submenu: schemes.SubmenuBase, submenu_ser
     tags=["Подменю"],
 )
 async def update_submenu(
-    menu_id: int, submenu_id: int, submenu: schemes.SubmenuUpdate, submenu_service: SubmenuService = Depends(ss)
+    menu_id: int, submenu_id: int, submenu: schemes.SubmenuUpdate, submenu_service: SubmenuService = Depends(get_submenu_service)
 ):
     """Update submenu item"""
     res = await submenu_service.update_submenu(menu_id, submenu_id, submenu)
@@ -49,7 +49,7 @@ async def update_submenu(
     #response_model=list[schemes.Submenu],
     tags=["Подменю"],
 )
-async def read_submenus(menu_id: int, submenu_service: SubmenuService = Depends(ss)):
+async def read_submenus(menu_id: int, submenu_service: SubmenuService = Depends(get_submenu_service)):
     """Read submenus list"""
     return await submenu_service.read_submenus(menu_id)
 
@@ -60,7 +60,7 @@ async def read_submenus(menu_id: int, submenu_service: SubmenuService = Depends(
     response_model=schemes.Submenu,
     tags=["Подменю"],
 )
-async def read_submenu(menu_id: int, submenu_id: int, submenu_service: SubmenuService = Depends(ss)):
+async def read_submenu(menu_id: int, submenu_id: int, submenu_service: SubmenuService = Depends(get_submenu_service)):
     """Read submenu item"""
     res = await submenu_service.read_submenu(menu_id, submenu_id)
     if not res:
@@ -76,7 +76,7 @@ async def read_submenu(menu_id: int, submenu_id: int, submenu_service: SubmenuSe
     status_code=200,
     tags=["Подменю"],
 )
-async def delete_submenu(menu_id: int, submenu_id: int, submenu_service: SubmenuService = Depends(ss)):
+async def delete_submenu(menu_id: int, submenu_id: int, submenu_service: SubmenuService = Depends(get_submenu_service)):
     """Delete submenu item"""
     res = await submenu_service.delete_submenu(menu_id, submenu_id)
     if not res:
