@@ -53,7 +53,7 @@ async def update_dish(
 @dish_router.get(
     path="/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes",
     summary="Просмотреть список блюд",
-    #response_model=list[schemes.Dish],
+    response_model=list[schemes.Dish],
     tags=["Блюда"],
 )
 async def read_dishes(
@@ -87,7 +87,7 @@ async def read_dish(
 @dish_router.delete(
     path="/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
     summary="Удалить блюдо",
-    #response_model=schemes.DishDelete,
+    response_model=schemes.DishDelete,
     status_code=200,
     tags=["Блюда"],
 )

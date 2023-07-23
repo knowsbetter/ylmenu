@@ -42,7 +42,7 @@ async def update_menu(menu_id: str, menu: schemes.MenuUpdate, menu_service: Menu
 @menu_router.get(
     path="/api/v1/menus/",
     summary="Просмотреть список меню",
-    #response_model=list[schemes.Menu],
+    response_model=list[schemes.Menu],
     tags=["Меню"],
 )
 async def read_menus(menu_service: MenuService = Depends(get_menu_service)):
@@ -67,7 +67,7 @@ async def read_menu(menu_id: str, menu_service: MenuService = Depends(get_menu_s
 @menu_router.delete(
     path="/api/v1/menus/{menu_id}",
     summary="Удалить меню",
-    #response_model=schemes.MenuDelete,
+    response_model=schemes.MenuDelete,
     status_code=200,
     tags=["Меню"],
 )

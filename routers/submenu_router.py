@@ -44,7 +44,7 @@ async def update_submenu(
 @submenu_router.get(
     path="/api/v1/menus/{menu_id}/submenus",
     summary="Просмотреть список подменю",
-    #response_model=list[schemes.Submenu],
+    response_model=list[schemes.Submenu],
     tags=["Подменю"],
 )
 async def read_submenus(menu_id: str, submenu_service: SubmenuService = Depends(get_submenu_service)):
@@ -69,7 +69,7 @@ async def read_submenu(menu_id: str, submenu_id: str, submenu_service: SubmenuSe
 @submenu_router.delete(
     path="/api/v1/menus/{menu_id}/submenus/{submenu_id}",
     summary="Удалить подменю",
-    #response_model=schemes.SubmenuDelete,
+    response_model=schemes.SubmenuDelete,
     status_code=200,
     tags=["Подменю"],
 )
