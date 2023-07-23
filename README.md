@@ -12,6 +12,6 @@
  <li>В командной строке переходим в папку проекта, выполняем установку необходимых пакетов командой:<br>
   <b>$ pip install -r requirements.txt</b></li>
  <li>Запускаем проект из командной строки:<br>
-  <b>$ uvicorn menuapp.main:app</b><br>Проект по умолчанию доступен на localhost:8000/docs.
+  <b>$ uvicorn mainapp.main:app</b><br>Проект по умолчанию доступен на localhost:8000/docs.
  </li>
 </ul>
