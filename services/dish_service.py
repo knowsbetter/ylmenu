@@ -17,6 +17,7 @@ class DishService:
         self.session = session
 
     async def create_dish(self, menu_id: str, submenu_id: str, dish: schemes.DishBase):
+        dish.price = "{:.2f}".format(float(dish.price))
         db_dish = await crud.DishCRUD.get_dish_by_title(db=self.session, dish_title=dish.title)
         if db_dish:
             return None

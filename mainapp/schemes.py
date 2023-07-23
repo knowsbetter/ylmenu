@@ -1,3 +1,4 @@
+from decimal import Decimal
 from uuid import UUID
 from pydantic import BaseModel
 
@@ -7,7 +8,7 @@ class DishBase(BaseModel):
 
     title: str
     description: str | None = None
-    price: str | None = None
+    price: str
 
     class Config:
         json_schema_extra = {
@@ -24,7 +25,7 @@ class DishUpdate(BaseModel):
 
     title: str
     description: str | None = None
-    price: str | None = None
+    price: str
 
     class Config:
         json_schema_extra = {

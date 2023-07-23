@@ -3,9 +3,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from services.menu_service import MenuService
 from services.menu_service import get_menu_service
 
-from routers import menu_router, submenu_router, dish_router
+from routers import menu_router
 
-from mainapp import models, schemes
+from mainapp import schemes
 from mainapp.database import engine
 
 menu_router = APIRouter()
