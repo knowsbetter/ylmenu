@@ -22,7 +22,7 @@ class MenuService:
             return None
         return await crud.MenuCRUD.create_menu(menu=menu, db=self.session)
 
-    async def update_menu(self, menu_id: int, menu: schemes.MenuUpdate):
+    async def update_menu(self, menu_id: str, menu: schemes.MenuUpdate):
         db_menu = await crud.MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
         if db_menu:
             db_menu.title = menu.title
@@ -35,13 +35,13 @@ class MenuService:
         menus = await crud.MenuCRUD.get_menus(db=self.session)
         return menus
 
-    async def read_menu(self, menu_id: int):
+    async def read_menu(self, menu_id: str):
         db_menu = await crud.MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
         if db_menu is None:
             return None
         return db_menu
 
-    async def delete_menu(self, menu_id: int):
+    async def delete_menu(self, menu_id: str):
         db_menu = await crud.MenuCRUD.delete_menu(menu_id=menu_id, db=self.session)
         if db_menu is None:
             return None

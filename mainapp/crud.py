@@ -17,7 +17,7 @@ async def get_db():
 
 class MenuCRUD:
     @staticmethod
-    async def get_menu_by_id(menu_id: int, db: AsyncSession):
+    async def get_menu_by_id(menu_id: str, db: AsyncSession):
         """Get menu by id"""
         return (await db.execute(select(models.Menu).where(models.Menu.id == menu_id))).scalar()
 
@@ -42,7 +42,7 @@ class MenuCRUD:
         return db_menu
 
     @staticmethod
-    async def delete_menu(menu_id: int, db: AsyncSession):
+    async def delete_menu(menu_id: str, db: AsyncSession):
         """Delete menu item"""
         db_menu = await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)
         if db_menu is None:
@@ -53,7 +53,7 @@ class MenuCRUD:
             return True
 
     @staticmethod
-    async def update_menu(menu_id: int, db: AsyncSession):
+    async def update_menu(menu_id: str, db: AsyncSession):
         """Update menu item"""
         await db.commit()
         return await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)
@@ -61,7 +61,7 @@ class MenuCRUD:
 
 class SubmenuCRUD:
     @staticmethod
-    async def get_submenu_by_id(submenu_id: int, db: AsyncSession):
+    async def get_submenu_by_id(submenu_id: str, db: AsyncSession):
         """Get submenu by id"""
         return (await db.execute(select(models.Submenu).where(models.Submenu.id == submenu_id))).scalar()
 
@@ -71,12 +71,12 @@ class SubmenuCRUD:
         return (await db.execute(select(models.Submenu).where(models.Submenu.title == submenu_title))).scalar()
 
     @staticmethod
-    async def get_submenus(menu_id: int, db: AsyncSession):
+    async def get_submenus(menu_id: str, db: AsyncSession):
         """Get submenus list"""
         return (await db.execute(select(models.Submenu).where(models.Submenu.menu_id == menu_id))).scalars().all()
 
     @staticmethod
-    async def create_submenu(submenu: schemes.SubmenuBase, menu_id: int, db: AsyncSession):
+    async def create_submenu(submenu: schemes.SubmenuBase, menu_id: str, db: AsyncSession):
         """Create submenu item"""
         db_submenu = models.Submenu(**submenu.model_dump())
         db_submenu.menu_id = menu_id
@@ -87,7 +87,7 @@ class SubmenuCRUD:
         return db_submenu
 
     @staticmethod
-    async def delete_submenu(menu_id: int, submenu_id: int, db: AsyncSession):
+    async def delete_submenu(menu_id: str, submenu_id: str, db: AsyncSession):
         """Delete submenu item"""
         db_submenu = await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)
         if db_submenu is None:
@@ -101,7 +101,7 @@ class SubmenuCRUD:
             return True
 
     @staticmethod
-    async def update_submenu(submenu_id: int, db: AsyncSession):
+    async def update_submenu(submenu_id: str, db: AsyncSession):
         """Update submenu item"""
         await db.commit()
         return await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)
@@ -109,7 +109,7 @@ class SubmenuCRUD:
 
 class DishCRUD:
     @staticmethod
-    async def get_dish_by_id(dish_id: int, db: AsyncSession):
+    async def get_dish_by_id(dish_id: str, db: AsyncSession):
         """Get dish by id"""
         return (await db.execute(select(models.Dish).where(models.Dish.id == dish_id))).scalar()
 
@@ -119,7 +119,7 @@ class DishCRUD:
         return (await db.execute(select(models.Dish).where(models.Dish.title == dish_title))).scalar()
 
     @staticmethod
-    async def get_dishes(menu_id: int, submenu_id: int, db: AsyncSession):
+    async def get_dishes(menu_id: str, submenu_id: str, db: AsyncSession):
         """Get dishes list"""
         return (
             (
@@ -134,7 +134,7 @@ class DishCRUD:
         )
 
     @staticmethod
-    async def create_dish(dish: schemes.DishBase, menu_id: int, submenu_id: int, db: AsyncSession):
+    async def create_dish(dish: schemes.DishBase, menu_id: str, submenu_id: str, db: AsyncSession):
         """Create dish item"""
         db_dish = models.Dish(**dish.model_dump())
         db_dish.menu_id = menu_id
@@ -146,7 +146,7 @@ class DishCRUD:
         return db_dish
 
     @staticmethod
-    async def delete_dish(dish_id: int, menu_id: int, submenu_id: int, db: AsyncSession):
+    async def delete_dish(dish_id: str, menu_id: str, submenu_id: str, db: AsyncSession):
         """Delete dish item"""
         db_dish = await DishCRUD.get_dish_by_id(db=db, dish_id=dish_id)
         if db_dish is None:
@@ -159,7 +159,7 @@ class DishCRUD:
             return True
 
     @staticmethod
-    async def update_dish(dish_id: int, db: AsyncSession):
+    async def update_dish(dish_id: str, db: AsyncSession):
         """Update dish item"""
         await db.commit()
         return await DishCRUD.get_dish_by_id(db=db, dish_id=dish_id)

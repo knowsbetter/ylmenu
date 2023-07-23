@@ -18,8 +18,8 @@ dish_router = APIRouter()
     tags=["Блюда"],
 )
 async def create_dish(
-    menu_id: int,
-    submenu_id: int,
+    menu_id: str,
+    submenu_id: str,
     dish: schemes.DishBase,
     dish_service: DishService = Depends(get_dish_service),
 ):
@@ -27,7 +27,6 @@ async def create_dish(
     res = await dish_service.create_dish(menu_id, submenu_id, dish)
     if not res:
         raise HTTPException(status_code=400, detail="dish already exists")
-    res.id = str(res.id)
     return res
 
 
@@ -38,9 +37,9 @@ async def create_dish(
     tags=["Блюда"],
 )
 async def update_dish(
-    menu_id: int,
-    submenu_id: int,
-    dish_id: int,
+    menu_id: str,
+    submenu_id: str,
+    dish_id: str,
     dish: schemes.DishUpdate,
     dish_service: DishService = Depends(get_dish_service),
 ):
@@ -48,7 +47,6 @@ async def update_dish(
     res = await dish_service.update_dish(menu_id, submenu_id, dish_id, dish)
     if not res:
         raise HTTPException(status_code=404, detail="dish not found")
-    res.id = str(res.id)
     return res
 
 
@@ -59,8 +57,8 @@ async def update_dish(
     tags=["Блюда"],
 )
 async def read_dishes(
-    menu_id: int,
-    submenu_id: int,
+    menu_id: str,
+    submenu_id: str,
     dish_service: DishService = Depends(get_dish_service),
 ):
     """Read dishes list"""
@@ -74,16 +72,15 @@ async def read_dishes(
     tags=["Блюда"],
 )
 async def read_dish(
-    menu_id: int,
-    submenu_id: int,
-    dish_id: int,
+    menu_id: str,
+    submenu_id: str,
+    dish_id: str,
     dish_service: DishService = Depends(get_dish_service),
 ):
     """Read dish item"""
     res = await dish_service.read_dish(menu_id, submenu_id, dish_id)
     if not res:
         raise HTTPException(status_code=404, detail="dish not found")
-    res.id = str(res.id)
     return res
 
 
@@ -95,9 +92,9 @@ async def read_dish(
     tags=["Блюда"],
 )
 async def delete_dish(
-    menu_id: int,
-    submenu_id: int,
-    dish_id: int,
+    menu_id: str,
+    submenu_id: str,
+    dish_id: str,
     dish_service: DishService = Depends(get_dish_service),
 ):
     """Delete dish item"""

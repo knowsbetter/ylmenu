@@ -16,13 +16,13 @@ class SubmenuService:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create_submenu(self, menu_id: int, submenu: schemes.SubmenuBase):
+    async def create_submenu(self, menu_id: str, submenu: schemes.SubmenuBase):
         db_submenu = await crud.SubmenuCRUD.get_submenu_by_title(submenu_title=submenu.title, db=self.session)
         if db_submenu:
             return None
         return await crud.SubmenuCRUD.create_submenu(db=self.session, submenu=submenu, menu_id=menu_id)
 
-    async def update_submenu(self, menu_id: int, submenu_id: int, submenu: schemes.SubmenuUpdate):
+    async def update_submenu(self, menu_id: str, submenu_id: str, submenu: schemes.SubmenuUpdate):
         db_submenu = await crud.SubmenuCRUD.get_submenu_by_id(db=self.session, submenu_id=submenu_id)
         if db_submenu:
             db_submenu.title = submenu.title
@@ -31,17 +31,17 @@ class SubmenuService:
         else:
             return None
 
-    async def read_submenus(self, menu_id: int):
+    async def read_submenus(self, menu_id: str):
         submenus = await crud.SubmenuCRUD.get_submenus(db=self.session, menu_id=menu_id)
         return submenus
 
-    async def read_submenu(self, menu_id: int, submenu_id: int):
+    async def read_submenu(self, menu_id: str, submenu_id: str):
         db_submenu = await crud.SubmenuCRUD.get_submenu_by_id(db=self.session, submenu_id=submenu_id)
         if db_submenu is None:
             return None
         return db_submenu
 
-    async def delete_submenu(self, menu_id: int, submenu_id: int):
+    async def delete_submenu(self, menu_id: str, submenu_id: str):
         db_submenu = await crud.SubmenuCRUD.delete_submenu(db=self.session, menu_id=menu_id, submenu_id=submenu_id)
         if db_submenu is None:
             return None
