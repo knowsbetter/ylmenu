@@ -5,7 +5,9 @@ from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from . import models, schemes
+from models import models
+
+from schemes import schemes
 from .database import SessionLocal
 
 

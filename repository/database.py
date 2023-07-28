@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from . import config
+from mainapp import config
 
 async def start_db():
     async with engine.begin() as conn:

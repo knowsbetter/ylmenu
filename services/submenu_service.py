@@ -2,8 +2,9 @@ from fastapi import Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from mainapp import crud, schemes
-from mainapp.database import SessionLocal
+from schemes import schemes
+from repository.database import SessionLocal
+from repository import crud
 
 
 async def get_db():

@@ -5,8 +5,8 @@ from services.dish_service import get_dish_service
 
 from routers import dish_router
 
-from mainapp import schemes
-from mainapp.database import engine
+from schemes import schemes
+from repository.database import engine
 
 dish_router = APIRouter()
 

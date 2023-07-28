@@ -2,8 +2,8 @@ from fastapi import Depends, FastAPI
 
 from routers import menu_router, submenu_router, dish_router
 
-from . import models
-from .database import start_db
+from models import models
+from repository.database import start_db
 
 app = FastAPI(title="Приложение для меню")
 
