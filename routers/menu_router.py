@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from services.menu_service import MenuService
-from services.menu_service import get_menu_service
 
 from routers import menu_router
 
@@ -17,7 +16,7 @@ menu_router = APIRouter()
     status_code=201,
     tags=["Меню"],
 )
-async def create_menu(menu: schemes.MenuBase, menu_service: MenuService = Depends(get_menu_service)):
+async def create_menu(menu: schemes.MenuBase, menu_service: MenuService = Depends(MenuService)):
     """Create menu item"""
     res = await menu_service.create_menu(menu)
     if not res:
@@ -31,7 +30,7 @@ async def create_menu(menu: schemes.MenuBase, menu_service: MenuService = Depend
     response_model=schemes.Menu,
     tags=["Меню"],
 )
-async def update_menu(menu_id: str, menu: schemes.MenuUpdate, menu_service: MenuService = Depends(get_menu_service)):
+async def update_menu(menu_id: str, menu: schemes.MenuUpdate, menu_service: MenuService = Depends(MenuService)):
     """Update menu item"""
     res = await menu_service.update_menu(menu_id, menu)
     if not res:
@@ -45,7 +44,7 @@ async def update_menu(menu_id: str, menu: schemes.MenuUpdate, menu_service: Menu
     response_model=list[schemes.Menu],
     tags=["Меню"],
 )
-async def read_menus(menu_service: MenuService = Depends(get_menu_service)):
+async def read_menus(menu_service: MenuService = Depends(MenuService)):
     """Read menus list"""
     return await menu_service.read_menus()
 
@@ -56,7 +55,7 @@ async def read_menus(menu_service: MenuService = Depends(get_menu_service)):
     response_model=schemes.Menu,
     tags=["Меню"],
 )
-async def read_menu(menu_id: str, menu_service: MenuService = Depends(get_menu_service)):
+async def read_menu(menu_id: str, menu_service: MenuService = Depends(MenuService)):
     """Read menu item"""
     res = await menu_service.read_menu(menu_id)
     if not res:
@@ -71,7 +70,7 @@ async def read_menu(menu_id: str, menu_service: MenuService = Depends(get_menu_s
     status_code=200,
     tags=["Меню"],
 )
-async def delete_menu(menu_id: str, menu_service: MenuService = Depends(get_menu_service)):
+async def delete_menu(menu_id: str, menu_service: MenuService = Depends(MenuService)):
     """Delete menu item"""
     res = await menu_service.delete_menu(menu_id)
     if not res:
