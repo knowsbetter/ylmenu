@@ -4,13 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemes import schemes
 from repository.database import SessionLocal
-from repository import crud
-
-
-async def get_db():
-    """Returns database session"""
-    async with SessionLocal() as db:
-        yield db
+from repository.menu_crud import MenuCRUD
+from repository.database import get_db
 
 
 class MenuService:
@@ -18,32 +13,32 @@ class MenuService:
         self.session = session
 
     async def create_menu(self, menu: schemes.MenuBase):
-        db_menu = await crud.MenuCRUD.get_menu_by_title(menu_title=menu.title, db=self.session)
+        db_menu = await MenuCRUD.get_menu_by_title(menu_title=menu.title, db=self.session)
         if db_menu:
             return None
-        return await crud.MenuCRUD.create_menu(menu=menu, db=self.session)
+        return await MenuCRUD.create_menu(menu=menu, db=self.session)
 
     async def update_menu(self, menu_id: str, menu: schemes.MenuUpdate):
-        db_menu = await crud.MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
+        db_menu = await MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
         if db_menu:
             db_menu.title = menu.title
             db_menu.description = menu.description
-            return await crud.MenuCRUD.update_menu(menu_id=menu_id, db=self.session)
+            return await MenuCRUD.update_menu(menu_id=menu_id, db=self.session)
         else:
             return None
 
     async def read_menus(self):
-        menus = await crud.MenuCRUD.get_menus(db=self.session)
+        menus = await MenuCRUD.get_menus(db=self.session)
         return menus
 
     async def read_menu(self, menu_id: str):
-        db_menu = await crud.MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
+        db_menu = await MenuCRUD.get_menu_by_id(menu_id=menu_id, db=self.session)
         if db_menu is None:
             return None
         return db_menu
 
     async def delete_menu(self, menu_id: str):
-        db_menu = await crud.MenuCRUD.delete_menu(menu_id=menu_id, db=self.session)
+        db_menu = await MenuCRUD.delete_menu(menu_id=menu_id, db=self.session)
         if db_menu is None:
             return None
         return {"status": True, "message": "The menu has been deleted"}

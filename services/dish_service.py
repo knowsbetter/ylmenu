@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemes import schemes
 from repository.database import SessionLocal
-from repository import crud
+from repository.dish_crud import DishCRUD
+from repository.database import get_db
 
 
 async def get_db():
@@ -19,33 +20,33 @@ class DishService:
 
     async def create_dish(self, menu_id: str, submenu_id: str, dish: schemes.DishBase):
         dish.price = "{:.2f}".format(float(dish.price))
-        db_dish = await crud.DishCRUD.get_dish_by_title(db=self.session, dish_title=dish.title)
+        db_dish = await DishCRUD.get_dish_by_title(db=self.session, dish_title=dish.title)
         if db_dish:
             return None
-        return await crud.DishCRUD.create_dish(db=self.session, dish=dish, menu_id=menu_id, submenu_id=submenu_id)
+        return await DishCRUD.create_dish(db=self.session, dish=dish, menu_id=menu_id, submenu_id=submenu_id)
 
     async def update_dish(self, menu_id: str, submenu_id: str, dish_id: str, dish: schemes.DishUpdate):
-        db_dish = await crud.DishCRUD.get_dish_by_id(db=self.session, dish_id=dish_id)
+        db_dish = await DishCRUD.get_dish_by_id(db=self.session, dish_id=dish_id)
         if db_dish:
             db_dish.title = dish.title
             db_dish.description = dish.description
             db_dish.price = dish.price
-            return await crud.DishCRUD.update_dish(db=self.session, dish_id=dish_id)
+            return await DishCRUD.update_dish(db=self.session, dish_id=dish_id)
         else:
             return None
 
     async def read_dishes(self, menu_id: str, submenu_id: str):
-        dishes = await crud.DishCRUD.get_dishes(db=self.session, menu_id=menu_id, submenu_id=submenu_id)
+        dishes = await DishCRUD.get_dishes(db=self.session, menu_id=menu_id, submenu_id=submenu_id)
         return dishes
 
     async def read_dish(self, menu_id: str, submenu_id: str, dish_id: str):
-        db_dish = await crud.DishCRUD.get_dish_by_id(db=self.session, dish_id=dish_id)
+        db_dish = await DishCRUD.get_dish_by_id(db=self.session, dish_id=dish_id)
         if db_dish is None:
             return None
         return db_dish
 
     async def delete_dish(self, menu_id: str, submenu_id: str, dish_id: str):
-        db_dish = await crud.DishCRUD.delete_dish(
+        db_dish = await DishCRUD.delete_dish(
             db=self.session, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id
         )
         if db_dish is None:
