@@ -1,54 +1,40 @@
 from fastapi import Depends
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemes import schemes
-from repository.database import SessionLocal
 from repository.submenu_crud import SubmenuCRUD
-from repository.database import get_db
-
-
-async def get_db():
-    """Returns database session"""
-    async with SessionLocal() as db:
-        yield db
 
 
 class SubmenuService:
-    def __init__(self, session: AsyncSession):
-        self.session = session
+    def __init__(self, submenu_crud: SubmenuCRUD = Depends(SubmenuCRUD)):
+        self.submenu_crud = submenu_crud
 
     async def create_submenu(self, menu_id: str, submenu: schemes.SubmenuBase):
-        db_submenu = await SubmenuCRUD.get_submenu_by_title(submenu_title=submenu.title, db=self.session)
+        db_submenu = await self.submenu_crud.get_submenu_by_title(submenu_title=submenu.title)
         if db_submenu:
             return None
-        return await SubmenuCRUD.create_submenu(db=self.session, submenu=submenu, menu_id=menu_id)
+        return await self.submenu_crud.create_submenu(submenu=submenu, menu_id=menu_id)
 
     async def update_submenu(self, menu_id: str, submenu_id: str, submenu: schemes.SubmenuUpdate):
-        db_submenu = await SubmenuCRUD.get_submenu_by_id(db=self.session, submenu_id=submenu_id)
+        db_submenu = await self.submenu_crud.get_submenu_by_id(submenu_id=submenu_id)
         if db_submenu:
             db_submenu.title = submenu.title
             db_submenu.description = submenu.description
-            return await SubmenuCRUD.update_submenu(db=self.session, submenu_id=submenu_id)
+            return await self.submenu_crud.update_submenu(submenu_id=submenu_id)
         else:
             return None
 
     async def read_submenus(self, menu_id: str):
-        submenus = await SubmenuCRUD.get_submenus(db=self.session, menu_id=menu_id)
+        submenus = await self.submenu_crud.get_submenus(menu_id=menu_id)
         return submenus
 
     async def read_submenu(self, menu_id: str, submenu_id: str):
-        db_submenu = await SubmenuCRUD.get_submenu_by_id(db=self.session, submenu_id=submenu_id)
+        db_submenu = await self.submenu_crud.get_submenu_by_id(submenu_id=submenu_id)
         if db_submenu is None:
             return None
         return db_submenu
 
     async def delete_submenu(self, menu_id: str, submenu_id: str):
-        db_submenu = await SubmenuCRUD.delete_submenu(db=self.session, menu_id=menu_id, submenu_id=submenu_id)
+        db_submenu = await self.submenu_crud.delete_submenu(menu_id=menu_id, submenu_id=submenu_id)
         if db_submenu is None:
             return None
         return {"status": True, "message": "The submenu has been deleted"}
-
-
-def get_submenu_service(session: AsyncSession = Depends(get_db)):
-    return SubmenuService(session)

@@ -1,9 +1,6 @@
 from fastapi import Depends
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemes import schemes
-from repository.database import SessionLocal
 from repository.menu_crud import MenuCRUD
 
 

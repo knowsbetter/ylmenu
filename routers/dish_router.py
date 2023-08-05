@@ -1,12 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from services.dish_service import DishService
-from services.dish_service import get_dish_service
 
 from routers import dish_router
 
 from schemes import schemes
-from repository.database import engine
 
 dish_router = APIRouter()
 
@@ -21,7 +19,7 @@ async def create_dish(
     menu_id: str,
     submenu_id: str,
     dish: schemes.DishBase,
-    dish_service: DishService = Depends(get_dish_service),
+    dish_service: DishService = Depends(DishService),
 ):
     """Create dish item"""
     res = await dish_service.create_dish(menu_id, submenu_id, dish)
@@ -41,7 +39,7 @@ async def update_dish(
     submenu_id: str,
     dish_id: str,
     dish: schemes.DishUpdate,
-    dish_service: DishService = Depends(get_dish_service),
+    dish_service: DishService = Depends(DishService),
 ):
     """Update dish item"""
     res = await dish_service.update_dish(menu_id, submenu_id, dish_id, dish)
@@ -59,7 +57,7 @@ async def update_dish(
 async def read_dishes(
     menu_id: str,
     submenu_id: str,
-    dish_service: DishService = Depends(get_dish_service),
+    dish_service: DishService = Depends(DishService),
 ):
     """Read dishes list"""
     return await dish_service.read_dishes(menu_id, submenu_id)
@@ -75,7 +73,7 @@ async def read_dish(
     menu_id: str,
     submenu_id: str,
     dish_id: str,
-    dish_service: DishService = Depends(get_dish_service),
+    dish_service: DishService = Depends(DishService),
 ):
     """Read dish item"""
     res = await dish_service.read_dish(menu_id, submenu_id, dish_id)
@@ -95,7 +93,7 @@ async def delete_dish(
     menu_id: str,
     submenu_id: str,
     dish_id: str,
-    dish_service: DishService = Depends(get_dish_service),
+    dish_service: DishService = Depends(DishService),
 ):
     """Delete dish item"""
     res = await dish_service.delete_dish(menu_id, submenu_id, dish_id)

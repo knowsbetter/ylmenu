@@ -12,22 +12,23 @@ from .menu_crud import MenuCRUD
 from .submenu_crud import SubmenuCRUD
 
 class DishCRUD:
-    @staticmethod
-    async def get_dish_by_id(dish_id: str, db: AsyncSession):
+
+    def __init__(self, db: AsyncSession = Depends(get_db)):
+        self.db = db
+
+    async def get_dish_by_id(self, dish_id: str):
         """Get dish by id"""
-        return (await db.execute(select(models.Dish).where(models.Dish.id == dish_id))).scalar()
+        return (await self.db.execute(select(models.Dish).where(models.Dish.id == dish_id))).scalar()
 
-    @staticmethod
-    async def get_dish_by_title(dish_title: str, db: AsyncSession):
+    async def get_dish_by_title(self, dish_title: str):
         """Get dish by title"""
-        return (await db.execute(select(models.Dish).where(models.Dish.title == dish_title))).scalar()
+        return (await self.db.execute(select(models.Dish).where(models.Dish.title == dish_title))).scalar()
 
-    @staticmethod
-    async def get_dishes(menu_id: str, submenu_id: str, db: AsyncSession):
+    async def get_dishes(self, menu_id: str, submenu_id: str):
         """Get dishes list"""
         return (
             (
-                await db.execute(
+                await self.db.execute(
                     select(models.Dish)
                     .where(models.Dish.menu_id == menu_id)
                     .where(models.Dish.submenu_id == submenu_id)
@@ -37,33 +38,34 @@ class DishCRUD:
             .all()
         )
 
-    @staticmethod
-    async def create_dish(dish: schemes.DishBase, menu_id: str, submenu_id: str, db: AsyncSession):
+    async def create_dish(self, dish: schemes.DishBase, menu_id: str, submenu_id: str):
         """Create dish item"""
         db_dish = models.Dish(**dish.model_dump())
         db_dish.menu_id = menu_id
         db_dish.submenu_id = submenu_id
-        (await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)).dishes_count += 1
-        (await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)).dishes_count += 1
-        db.add(db_dish)
-        await db.commit()
+        menu_crud = MenuCRUD(db=self.db)
+        submenu_crud = SubmenuCRUD(db=self.db)
+        (await menu_crud.get_menu_by_id(menu_id=menu_id)).dishes_count += 1
+        (await submenu_crud.get_submenu_by_id(submenu_id=submenu_id)).dishes_count += 1
+        self.db.add(db_dish)
+        await self.db.commit()
         return db_dish
 
-    @staticmethod
-    async def delete_dish(dish_id: str, menu_id: str, submenu_id: str, db: AsyncSession):
+    async def delete_dish(self, dish_id: str, menu_id: str, submenu_id: str):
         """Delete dish item"""
-        db_dish = await DishCRUD.get_dish_by_id(db=db, dish_id=dish_id)
+        db_dish = await self.get_dish_by_id(dish_id=dish_id)
         if db_dish is None:
             return None
         else:
-            (await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)).dishes_count -= 1
-            (await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)).dishes_count -= 1
-            await db.delete(db_dish)
-            await db.commit()
+            menu_crud = MenuCRUD(db=self.db)
+            submenu_crud = SubmenuCRUD(db=self.db)
+            (await menu_crud.get_menu_by_id(menu_id=menu_id)).dishes_count -= 1
+            (await submenu_crud.get_submenu_by_id(submenu_id=submenu_id)).dishes_count -= 1
+            await self.db.delete(db_dish)
+            await self.db.commit()
             return True
 
-    @staticmethod
-    async def update_dish(dish_id: str, db: AsyncSession):
+    async def update_dish(self, dish_id: str):
         """Update dish item"""
-        await db.commit()
-        return await DishCRUD.get_dish_by_id(db=db, dish_id=dish_id)
+        await self.db.commit()
+        return await self.get_dish_by_id(dish_id=dish_id)

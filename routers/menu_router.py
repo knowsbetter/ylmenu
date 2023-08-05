@@ -5,7 +5,6 @@ from services.menu_service import MenuService
 from routers import menu_router
 
 from schemes import schemes
-from repository.database import engine
 
 menu_router = APIRouter()
 

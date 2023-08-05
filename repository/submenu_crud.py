@@ -11,48 +11,48 @@ from fastapi import Depends
 from .menu_crud import MenuCRUD
 
 class SubmenuCRUD:
-    @staticmethod
-    async def get_submenu_by_id(submenu_id: str, db: AsyncSession):
+
+    def __init__(self, db: AsyncSession = Depends(get_db)):
+        self.db = db
+
+    async def get_submenu_by_id(self, submenu_id: str):
         """Get submenu by id"""
-        return (await db.execute(select(models.Submenu).where(models.Submenu.id == submenu_id))).scalar()
+        return (await self.db.execute(select(models.Submenu).where(models.Submenu.id == submenu_id))).scalar()
 
-    @staticmethod
-    async def get_submenu_by_title(submenu_title: str, db: AsyncSession):
+    async def get_submenu_by_title(self, submenu_title: str):
         """Get submenu by title"""
-        return (await db.execute(select(models.Submenu).where(models.Submenu.title == submenu_title))).scalar()
+        return (await self.db.execute(select(models.Submenu).where(models.Submenu.title == submenu_title))).scalar()
 
-    @staticmethod
-    async def get_submenus(menu_id: str, db: AsyncSession):
+    async def get_submenus(self, menu_id: str):
         """Get submenus list"""
-        return (await db.execute(select(models.Submenu).where(models.Submenu.menu_id == menu_id))).scalars().all()
+        return (await self.db.execute(select(models.Submenu).where(models.Submenu.menu_id == menu_id))).scalars().all()
 
-    @staticmethod
-    async def create_submenu(submenu: schemes.SubmenuBase, menu_id: str, db: AsyncSession):
+    async def create_submenu(self, submenu: schemes.SubmenuBase, menu_id: str):
         """Create submenu item"""
         db_submenu = models.Submenu(**submenu.model_dump())
         db_submenu.menu_id = menu_id
         db_submenu.dishes_count = 0
-        (await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)).submenus_count += 1
-        db.add(db_submenu)
-        await db.commit()
+        menu_crud = MenuCRUD(db=self.db)
+        (await menu_crud.get_menu_by_id(menu_id=menu_id)).submenus_count += 1
+        self.db.add(db_submenu)
+        await self.db.commit()
         return db_submenu
 
-    @staticmethod
-    async def delete_submenu(menu_id: str, submenu_id: str, db: AsyncSession):
+    async def delete_submenu(self, menu_id: str, submenu_id: str):
         """Delete submenu item"""
-        db_submenu = await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)
+        db_submenu = await self.get_submenu_by_id(submenu_id=submenu_id)
         if db_submenu is None:
             return None
         else:
-            db_menu = await MenuCRUD.get_menu_by_id(db=db, menu_id=menu_id)
+            menu_crud = MenuCRUD(db=self.db)
+            db_menu = await menu_crud.get_menu_by_id(menu_id=menu_id)
             db_menu.submenus_count -= 1
             db_menu.dishes_count -= db_submenu.dishes_count
-            await db.delete(db_submenu)
-            await db.commit()
+            await self.db.delete(db_submenu)
+            await self.db.commit()
             return True
 
-    @staticmethod
-    async def update_submenu(submenu_id: str, db: AsyncSession):
+    async def update_submenu(self, submenu_id: str):
         """Update submenu item"""
-        await db.commit()
-        return await SubmenuCRUD.get_submenu_by_id(db=db, submenu_id=submenu_id)
+        await self.db.commit()
+        return await self.get_submenu_by_id(submenu_id=submenu_id)
