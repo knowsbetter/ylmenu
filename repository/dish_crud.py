@@ -1,15 +1,14 @@
+from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import models
-
 from schemes import schemes
+
 from .database import get_db
-
-from fastapi import Depends
-
 from .menu_crud import MenuCRUD
 from .submenu_crud import SubmenuCRUD
+
 
 class DishCRUD:
 

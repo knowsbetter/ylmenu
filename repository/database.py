@@ -1,12 +1,13 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from mainapp import config
+
 
 async def start_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 async def get_db():
     """Returns database session"""

@@ -1,14 +1,12 @@
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 
-from routers import menu_router, submenu_router, dish_router
-
-from models import models
 from repository.database import start_db
+from routers import dish_router, menu_router, submenu_router
 
-app = FastAPI(title="Приложение для меню")
+app = FastAPI(title='Приложение для меню')
 
 
-@app.on_event("startup")
+@app.on_event('startup')
 async def startup_event():
     await start_db()
 

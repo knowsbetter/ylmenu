@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from schemes import schemes
 from repository.submenu_crud import SubmenuCRUD
+from schemes import schemes
 
 
 class SubmenuService:
@@ -37,4 +37,4 @@ class SubmenuService:
         db_submenu = await self.submenu_crud.delete_submenu(menu_id=menu_id, submenu_id=submenu_id)
         if db_submenu is None:
             return None
-        return {"status": True, "message": "The submenu has been deleted"}
+        return {'status': True, 'message': 'The submenu has been deleted'}

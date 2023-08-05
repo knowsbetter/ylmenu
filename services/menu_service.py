@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from schemes import schemes
 from repository.menu_crud import MenuCRUD
+from schemes import schemes
 
 
 class MenuService:
@@ -37,4 +37,4 @@ class MenuService:
         db_menu = await self.menu_crud.delete_menu(menu_id=menu_id)
         if db_menu is None:
             return None
-        return {"status": True, "message": "The menu has been deleted"}
+        return {'status': True, 'message': 'The menu has been deleted'}

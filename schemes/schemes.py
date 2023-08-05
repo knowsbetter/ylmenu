@@ -9,11 +9,11 @@ class DishBase(BaseModel):
     price: str
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "dish title",
-                "description": "dish description",
-                "price": "0.00",
+        json_schema_extra={
+            'example': {
+                'title': 'dish title',
+                'description': 'dish description',
+                'price': '0.00',
             }
         })
 
@@ -26,11 +26,11 @@ class DishUpdate(BaseModel):
     price: str
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "updated dish title",
-                "description": "updated dish description",
-                "price": "0.00",
+        json_schema_extra={
+            'example': {
+                'title': 'updated dish title',
+                'description': 'updated dish description',
+                'price': '0.00',
             }
         })
 
@@ -41,12 +41,12 @@ class Dish(DishBase):
     id: str
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "dish title",
-                "description": "dish description",
-                "price": "dish price",
-                "id": "dish id",
+        json_schema_extra={
+            'example': {
+                'title': 'dish title',
+                'description': 'dish description',
+                'price': 'dish price',
+                'id': 'dish id',
             }
         })
 
@@ -58,7 +58,7 @@ class DishDelete(BaseModel):
     message: str
 
     model_config = ConfigDict(
-        json_schema_extra = {"example": {"status": "status", "message": "message"}})
+        json_schema_extra={'example': {'status': 'status', 'message': 'message'}})
 
 
 class SubmenuBase(BaseModel):
@@ -68,10 +68,10 @@ class SubmenuBase(BaseModel):
     description: str | None = None
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "submenu title",
-                "description": "submenu description",
+        json_schema_extra={
+            'example': {
+                'title': 'submenu title',
+                'description': 'submenu description',
             }
         })
 
@@ -83,10 +83,10 @@ class SubmenuUpdate(BaseModel):
     description: str | None = None
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "updated submenu title",
-                "description": "updated submenu description",
+        json_schema_extra={
+            'example': {
+                'title': 'updated submenu title',
+                'description': 'updated submenu description',
             }
         })
 
@@ -98,12 +98,12 @@ class Submenu(SubmenuBase):
     dishes_count: int
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "submenu title",
-                "description": "submenu description",
-                "id": "submenu id",
-                "dishes_count": "number for dishes",
+        json_schema_extra={
+            'example': {
+                'title': 'submenu title',
+                'description': 'submenu description',
+                'id': 'submenu id',
+                'dishes_count': 'number for dishes',
             }
         })
 
@@ -115,7 +115,7 @@ class SubmenuDelete(BaseModel):
     message: str
 
     model_config = ConfigDict(
-        json_schema_extra = {"example": {"status": "status", "message": "message"}})
+        json_schema_extra={'example': {'status': 'status', 'message': 'message'}})
 
 
 class MenuBase(BaseModel):
@@ -125,10 +125,10 @@ class MenuBase(BaseModel):
     description: str | None = None
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "menu title",
-                "description": "menu description",
+        json_schema_extra={
+            'example': {
+                'title': 'menu title',
+                'description': 'menu description',
             }
         })
 
@@ -140,10 +140,10 @@ class MenuUpdate(BaseModel):
     description: str | None = None
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "updated menu title",
-                "description": "updated menu description",
+        json_schema_extra={
+            'example': {
+                'title': 'updated menu title',
+                'description': 'updated menu description',
             }
         })
 
@@ -156,13 +156,13 @@ class Menu(MenuBase):
     dishes_count: int
 
     model_config = ConfigDict(
-        json_schema_extra = {
-            "example": {
-                "title": "menu title",
-                "description": "menu description",
-                "id": "menu id",
-                "submenu_count": "number for submenus",
-                "dishes_count": "number for dishes",
+        json_schema_extra={
+            'example': {
+                'title': 'menu title',
+                'description': 'menu description',
+                'id': 'menu id',
+                'submenu_count': 'number for submenus',
+                'dishes_count': 'number for dishes',
             }
         })
 
@@ -174,4 +174,4 @@ class MenuDelete(BaseModel):
     message: str
 
     model_config = ConfigDict(
-        json_schema_extra = {"example": {"status": "status", "message": "message"}})
+        json_schema_extra={'example': {'status': 'status', 'message': 'message'}})

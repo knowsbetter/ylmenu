@@ -1,9 +1,7 @@
 from fastapi import Depends
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemes import schemes
 from repository.dish_crud import DishCRUD
+from schemes import schemes
 
 
 class DishService:
@@ -11,7 +9,7 @@ class DishService:
         self.dish_crud = dish_crud
 
     async def create_dish(self, menu_id: str, submenu_id: str, dish: schemes.DishBase):
-        dish.price = "{:.2f}".format(float(dish.price))
+        dish.price = f'{float(dish.price):.2f}'
         db_dish = await self.dish_crud.get_dish_by_title(dish_title=dish.title)
         if db_dish:
             return None
@@ -43,4 +41,4 @@ class DishService:
         )
         if db_dish is None:
             return None
-        return {"status": True, "message": "The dish has been deleted"}
+        return {'status': True, 'message': 'The dish has been deleted'}
