@@ -58,7 +58,6 @@ class TestMenu:
             assert item['submenus_count'] >= 0
             assert item['dishes_count'] >= 0
 
-    @pytest.mark.asyncio
     async def test_get_menu_item(self):
         """Tests menu item getter"""
         async with LifespanManager(app):
@@ -79,7 +78,6 @@ class TestMenu:
         else:
             assert response_data['detail'] == 'menu not found'
 
-    @pytest.mark.asyncio
     async def test_get_nonexistant_menu_item(self):
         """Tests no menu getter"""
         async with LifespanManager(app):
@@ -90,7 +88,6 @@ class TestMenu:
         assert response_data
         assert response_data['detail'] == 'menu not found'
 
-    @pytest.mark.asyncio
     async def test_update_menu_item(self):
         """Tests menu item update"""
         async with LifespanManager(app):
@@ -107,7 +104,6 @@ class TestMenu:
         assert response_data['submenus_count'] >= 0
         assert response_data['dishes_count'] >= 0
 
-    @pytest.mark.asyncio
     async def test_update_nonexistant_menu_item(self):
         """Tests no menu item update"""
         async with LifespanManager(app):
@@ -118,7 +114,6 @@ class TestMenu:
         assert response_data
         assert response_data['detail'] == 'menu not found'
 
-    @pytest.mark.asyncio
     async def test_delete_menu_item(self):
         """Tests menu item removal"""
         async with LifespanManager(app):
@@ -130,7 +125,6 @@ class TestMenu:
         assert response_data['status'] is True
         assert response_data['message'] == 'The menu has been deleted'
 
-    @pytest.mark.asyncio
     async def test_delete_nonexistant_menu_item(self):
         """Tests no menu item removal"""
         async with LifespanManager(app):
@@ -142,8 +136,9 @@ class TestMenu:
         assert response_data['detail'] == 'menu not found'
 
 
+@pytest.mark.asyncio
 class TestSubmenu:
-    @pytest.mark.asyncio
+
     async def test_create_submenu_item(self):
         """Tests submenu item creation"""
         global menu_id, submenu_id
@@ -168,7 +163,6 @@ class TestSubmenu:
         else:
             assert response_data['detail'] == 'submenu already exists'
 
-    @pytest.mark.asyncio
     async def test_get_submenus_list(self):
         """Tests submenus list getter"""
         async with LifespanManager(app):
@@ -183,7 +177,6 @@ class TestSubmenu:
             assert type(item['id']) is str
             assert item['dishes_count'] >= 0
 
-    @pytest.mark.asyncio
     async def test_get_submenu_item(self):
         """Tests submenu item getter"""
         async with LifespanManager(app):
@@ -203,7 +196,6 @@ class TestSubmenu:
         else:
             assert response_data['detail'] == 'submenu not found'
 
-    @pytest.mark.asyncio
     async def test_get_nonexistant_submenu_item(self):
         """Tests no submenu item getter"""
         async with LifespanManager(app):
@@ -214,7 +206,6 @@ class TestSubmenu:
         assert response_data
         assert response_data['detail'] == 'submenu not found'
 
-    @pytest.mark.asyncio
     async def test_update_submenu_item(self):
         """Tests submenu item update"""
         async with LifespanManager(app):
@@ -231,7 +222,6 @@ class TestSubmenu:
         assert type(response_data['id']) is str
         assert response_data['dishes_count'] >= 0
 
-    @pytest.mark.asyncio
     async def test_update_nonexistant_submenu_item(self):
         """Tests no submenu item update"""
         async with LifespanManager(app):
@@ -245,7 +235,6 @@ class TestSubmenu:
         assert response_data
         assert response_data['detail'] == 'submenu not found'
 
-    @pytest.mark.asyncio
     async def test_delete_submenu_item(self):
         """Tests submenu item removal"""
         async with LifespanManager(app):
@@ -257,7 +246,6 @@ class TestSubmenu:
         assert response_data['status'] is True
         assert response_data['message'] == 'The submenu has been deleted'
 
-    @pytest.mark.asyncio
     async def test_delete_nonexistant_submenu_item(self):
         """Tests nosubmenu item removal"""
         async with LifespanManager(app):
@@ -270,8 +258,9 @@ class TestSubmenu:
         await TestMenu.test_delete_menu_item(TestMenu())
 
 
+@pytest.mark.asyncio
 class TestDish:
-    @pytest.mark.asyncio
+
     async def test_create_dish_item(self):
         """Tests dish item creation"""
         global menu_id, submenu_id, dish_id
@@ -295,7 +284,6 @@ class TestDish:
         elif response.status_code == status.HTTP_400_BAD_REQUEST:
             assert response_data['detail'] == 'dish already exists'
 
-    @pytest.mark.asyncio
     async def test_get_dishes_list(self):
         """Tests dishes list getter"""
         async with LifespanManager(app):
@@ -309,7 +297,6 @@ class TestDish:
             assert type(item['description']) is str
             assert type(item['id']) is str
 
-    @pytest.mark.asyncio
     async def test_get_dish_item(self):
         """Tests dish item getter"""
         async with LifespanManager(app):
@@ -328,7 +315,6 @@ class TestDish:
         else:
             assert response_data['detail'] == 'dish not found'
 
-    @pytest.mark.asyncio
     async def test_get_nonexistant_dich_item(self):
         """Tests no dish item getter"""
         async with LifespanManager(app):
@@ -339,7 +325,6 @@ class TestDish:
         assert response_data
         assert response_data['detail'] == 'dish not found'
 
-    @pytest.mark.asyncio
     async def test_update_dish_item(self):
         """Tests dish item update"""
         async with LifespanManager(app):
@@ -355,7 +340,6 @@ class TestDish:
         assert response_data['description'] == desc + '1'
         assert type(response_data['id']) is str
 
-    @pytest.mark.asyncio
     async def test_update_nonexistant_dich_item(self):
         """Tests no dish item update"""
         async with LifespanManager(app):
@@ -369,7 +353,6 @@ class TestDish:
         assert response_data
         assert response_data['detail'] == 'dish not found'
 
-    @pytest.mark.asyncio
     async def test_delete_dish_item(self):
         """Tests dish item removal"""
         async with LifespanManager(app):
@@ -381,7 +364,6 @@ class TestDish:
         assert response_data['status'] is True
         assert response_data['message'] == 'The dish has been deleted'
 
-    @pytest.mark.asyncio
     async def test_nonexistant_dish_item(self):
         """Tests no dish item removal"""
         async with LifespanManager(app):

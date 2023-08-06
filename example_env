@@ -1,3 +1,5 @@
 # Define variables below and rename the file to ".env"
 
 SQLALCHEMY_DATABASE_URL=
+REDIS_HOST=
+REDIS_PORT=
