@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
 from schemes import schemes
 from services.menu_service import MenuService
@@ -67,9 +67,9 @@ async def read_menu(menu_id: str, menu_service: MenuService = Depends(MenuServic
     status_code=200,
     tags=['Меню'],
 )
-async def delete_menu(menu_id: str, menu_service: MenuService = Depends(MenuService)):
+async def delete_menu(menu_id: str, background_tasks: BackgroundTasks, menu_service: MenuService = Depends(MenuService)):
     """Delete menu item"""
-    res = await menu_service.delete_menu(menu_id)
+    res = await menu_service.delete_menu(menu_id, background_tasks)
     if not res:
         raise HTTPException(status_code=404, detail='menu not found')
     return res

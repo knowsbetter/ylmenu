@@ -1,6 +1,6 @@
 version: '3.8'
 
-name: main_app_test_image
+name: menu_app_test_image
 services:
   my_web_app:
     build:
@@ -8,10 +8,19 @@ services:
     container_name: mainapp-web-test
     env_file:
       - .docker.env
+    volumes:
+      - excel_volume:/taskworker/admin
+      - json_volume:/taskworker/output
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
     depends_on:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     command: pytest
 
@@ -31,7 +40,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: menuapp-cache-test
+    container_name: mainapp-cache-test
     restart: always
     env_file:
       - .docker.env
@@ -45,3 +54,42 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+
+
+  celery:
+    build:
+      dockerfile: celery.Dockerfile
+    restart: always
+    container_name: mainapp-celery-web-test
+    env_file:
+      - .docker.env
+    volumes:
+      - excel_volume:/taskworker/admin
+      - json_volume:/taskworker/output
+    expose:
+      - 5672
+      - 8000
+    command: celery -A taskworker.main worker -B --loglevel=INFO --pool=solo
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      my_web_app:
+        condition: service_started
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: mainapp-rabbitmq-test
+    expose:
+      - 5672
+      - 15672
+    env_file:
+      - .docker.env
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 30s
+      retries: 3
+
+volumes:
+  excel_volume:
+  json_volume:

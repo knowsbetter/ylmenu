@@ -3,10 +3,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import models
+from repository.database import get_db
+from repository.menu_crud import MenuCRUD
 from schemes import schemes
-
-from .database import get_db
-from .menu_crud import MenuCRUD
 
 
 class SubmenuCRUD:

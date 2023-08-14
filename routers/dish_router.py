@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
 from schemes import schemes
 from services.dish_service import DishService
@@ -91,10 +91,11 @@ async def delete_dish(
     menu_id: str,
     submenu_id: str,
     dish_id: str,
+    background_tasks: BackgroundTasks,
     dish_service: DishService = Depends(DishService),
 ):
     """Delete dish item"""
-    res = await dish_service.delete_dish(menu_id, submenu_id, dish_id)
+    res = await dish_service.delete_dish(menu_id, submenu_id, dish_id, background_tasks)
     if not res:
         raise HTTPException(status_code=404, detail='dish not found')
     return res

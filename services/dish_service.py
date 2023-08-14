@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import BackgroundTasks, Depends
 from fastapi.encoders import jsonable_encoder
 
 from cache import redis_cache as cache
@@ -57,11 +57,11 @@ class DishService:
         )
         return db_dish
 
-    async def delete_dish(self, menu_id: str, submenu_id: str, dish_id: str):
+    async def delete_dish(self, menu_id: str, submenu_id: str, dish_id: str, background_tasks: BackgroundTasks):
         db_dish = await self.dish_crud.delete_dish(
             dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id
         )
         if db_dish is None:
             return None
-        await cache.delete_cache(f'/api/v1/menus/{menu_id}')
+        background_tasks.add_task(cache.delete_cache, f'/api/v1/menus/{menu_id}')
         return {'status': True, 'message': 'The dish has been deleted'}

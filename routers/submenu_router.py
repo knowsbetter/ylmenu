@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
 from schemes import schemes
 from services.submenu_service import SubmenuService
@@ -69,9 +69,9 @@ async def read_submenu(menu_id: str, submenu_id: str, submenu_service: SubmenuSe
     status_code=200,
     tags=['Подменю'],
 )
-async def delete_submenu(menu_id: str, submenu_id: str, submenu_service: SubmenuService = Depends(SubmenuService)):
+async def delete_submenu(menu_id: str, submenu_id: str, background_tasks: BackgroundTasks, submenu_service: SubmenuService = Depends(SubmenuService)):
     """Delete submenu item"""
-    res = await submenu_service.delete_submenu(menu_id, submenu_id)
+    res = await submenu_service.delete_submenu(menu_id, submenu_id, background_tasks)
     if not res:
         raise HTTPException(status_code=404, detail='submenu not found')
     return res

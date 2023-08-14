@@ -14,6 +14,7 @@ async def get_db():
     async with SessionLocal() as db:
         yield db
 
+
 engine = create_async_engine(config.SQLALCHEMY_DATABASE_URL)
 Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)

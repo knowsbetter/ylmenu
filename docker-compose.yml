@@ -5,16 +5,21 @@ services:
   my_web_app:
     build:
       dockerfile: Dockerfile
-    restart: always
     container_name: mainapp-web
-    ports:
-      - 8000:8000
     env_file:
       - .docker.env
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./taskworker/output:/ylmenu/taskworker/output
     depends_on:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     command: uvicorn mainapp.main:app --host 0.0.0.0 --port 8000
 
@@ -24,8 +29,6 @@ services:
     restart: always
     expose:
       - 5432
-    ports:
-      - 9000:5432
     env_file:
       - .docker.env
     healthcheck:
@@ -36,7 +39,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: menuapp-cache
+    container_name: mainapp-cache
     restart: always
     env_file:
       - .docker.env
@@ -50,3 +53,37 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+
+  celery:
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    container_name: mainapp-celery
+    env_file:
+      - .docker.env
+    expose:
+      - 5672
+      - 8000
+    volumes:
+      - ./taskworker/admin:/ylmenu/taskworker/admin
+      - ./taskworker/output:/ylmenu/taskworker/output
+    command: celery -A taskworker.main worker -B --loglevel=INFO --pool=solo
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      my_web_app:
+        condition: service_started
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: mainapp-rabbitmq
+    expose:
+      - 5672
+      - 15672
+    env_file:
+      - .docker.env
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 30s
+      retries: 3

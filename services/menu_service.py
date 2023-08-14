@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import BackgroundTasks, Depends
 from fastapi.encoders import jsonable_encoder
 
 from cache import redis_cache as cache
@@ -44,9 +44,9 @@ class MenuService:
         await cache.set_cache(f'/api/v1/menus/{menu_id}', jsonable_encoder(db_menu))
         return db_menu
 
-    async def delete_menu(self, menu_id: str):
+    async def delete_menu(self, menu_id: str, background_tasks: BackgroundTasks):
         db_menu = await self.menu_crud.delete_menu(menu_id=menu_id)
         if db_menu is None:
             return None
-        await cache.delete_cache(f'/api/v1/menus/{menu_id}')
+        background_tasks.add_task(cache.delete_cache, f'/api/v1/menus/{menu_id}')
         return {'status': True, 'message': 'The menu has been deleted'}

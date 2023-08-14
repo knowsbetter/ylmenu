@@ -3,9 +3,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import models
+from repository.database import get_db
 from schemes import schemes
-
-from .database import get_db
 
 
 class MenuCRUD:
