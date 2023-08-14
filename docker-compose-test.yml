@@ -1,20 +1,19 @@
 version: '3.8'
 
-name: menu_app_test_image
+name: main_app_image
 services:
   my_web_app:
     build:
-      dockerfile: test.Dockerfile
-    container_name: mainapp-web-test
+      dockerfile: Dockerfile
+    container_name: mainapp-web
     env_file:
       - .docker.env
-    volumes:
-      - excel_volume:/taskworker/admin
-      - json_volume:/taskworker/output
     expose:
       - 8000
     ports:
       - 8000:8000
+    volumes:
+      - ./taskworker/output:/ylmenu/taskworker/output
     depends_on:
       db:
         condition: service_healthy
@@ -22,11 +21,11 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    command: pytest
+    command: uvicorn mainapp.main:app --host 0.0.0.0 --port 8000
 
   db:
     image: postgres:15.1-alpine
-    container_name: mainapp-db-test
+    container_name: mainapp-db
     restart: always
     expose:
       - 5432
@@ -40,7 +39,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: mainapp-cache-test
+    container_name: mainapp-cache
     restart: always
     env_file:
       - .docker.env
@@ -55,21 +54,20 @@ services:
       timeout: 3s
       retries: 30
 
-
   celery:
     build:
-      dockerfile: celery.Dockerfile
+      dockerfile: Dockerfile
     restart: always
-    container_name: mainapp-celery-web-test
+    container_name: mainapp-celery
     env_file:
       - .docker.env
-    volumes:
-      - excel_volume:/taskworker/admin
-      - json_volume:/taskworker/output
     expose:
       - 5672
       - 8000
-    command: celery -A taskworker.main worker -B --loglevel=INFO --pool=solo
+    volumes:
+      - ./taskworker/admin:/ylmenu/taskworker/admin
+      - ./taskworker/output:/ylmenu/taskworker/output
+    command: celery -A taskworker.main worker --loglevel=INFO --pool=solo
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -78,7 +76,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:latest
-    container_name: mainapp-rabbitmq-test
+    container_name: mainapp-rabbitmq
     expose:
       - 5672
       - 15672
@@ -89,7 +87,3 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
-
-volumes:
-  excel_volume:
-  json_volume:
