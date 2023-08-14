@@ -36,3 +36,7 @@
   <b>$ docker-compose -f docker-compose-test.yml up</b>
  </li>
 </ul>
+
+<h1> Панель администратора: </h1>
+
+<ul><li> Файл меню для редактирования находится в папке taskworker/admin. </li><ul>

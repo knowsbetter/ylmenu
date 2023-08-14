@@ -26,7 +26,7 @@ app.conf.beat_schedule = {
 
 def start_update():
     if os.path.exists('taskworker/output/menu.json'):
-        return
+        os.remove('taskworker/output/menu.json')
     works.write_to_json(works.excel_to_json())
     works.signal_to_update_db()
 
